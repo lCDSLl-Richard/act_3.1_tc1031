@@ -1,8 +1,8 @@
 // =================================================================
 //
 // File: bst.h
-// Author:
-// Date:
+// Author: Ricardo Fernandez
+// Date: 18/10/2022
 //
 // =================================================================
 #ifndef BST_H
@@ -14,31 +14,35 @@
 #include "exception.h"
 #include "header.h"
 
-template <class T> class BST;
+using namespace std;
+
+template <class T>
+class BST;
 
 // =================================================================
 // Definition of the Node class
 // =================================================================
 template <class T>
-class Node {
+class Node
+{
 private:
 	T value;
 	Node *left, *right;
 
 	Node(T);
-	Node(T, Node<T>*, Node<T>*);
+	Node(T, Node<T> *, Node<T> *);
 
 	bool find(T) const;
 
 	void add(T);
 
-	Node<T>* succesor();
+	Node<T> *succesor();
 	void remove(T);
 	void removeChilds();
 
-	void inOrder(std::stringstream&) const;
-	void postOrder(std::stringstream&) const;
-	void preOrder(std::stringstream&) const;
+	void inOrder(std::stringstream &) const;
+	void postOrder(std::stringstream &) const;
+	void preOrder(std::stringstream &) const;
 
 	uint leaves() const;
 	uint depth() const;
@@ -64,7 +68,7 @@ Node<T>::Node(T val) : value(val), left(NULL), right(NULL) {}
 // =================================================================
 template <class T>
 Node<T>::Node(T val, Node<T> *le, Node<T> *ri)
-	: value(val), left(le), right(ri) {}
+		: value(val), left(le), right(ri) {}
 
 // =================================================================
 // Search for an element within the bst.
@@ -73,12 +77,18 @@ Node<T>::Node(T val, Node<T> *le, Node<T> *ri)
 // returns True, if the element is in the bst. False, otherwise.
 // =================================================================
 template <class T>
-bool Node<T>::find(T val) const {
-	if (val == value) {
+bool Node<T>::find(T val) const
+{
+	if (val == value)
+	{
 		return true;
-	} else if (val < value) {
+	}
+	else if (val < value)
+	{
 		return (left != NULL && left->find(val));
-	} else {
+	}
+	else
+	{
 		return (right != NULL && right->find(val));
 	}
 }
@@ -89,17 +99,27 @@ bool Node<T>::find(T val) const {
 // @param val, the element to be inserted.
 // =================================================================
 template <class T>
-void Node<T>::add(T val) {
-	if (val < value) {
-		if (left != NULL) {
+void Node<T>::add(T val)
+{
+	if (val < value)
+	{
+		if (left != NULL)
+		{
 			left->add(val);
-		} else {
+		}
+		else
+		{
 			left = new Node<T>(val);
 		}
-	} else {
-		if (right != NULL) {
+	}
+	else
+	{
+		if (right != NULL)
+		{
 			right->add(val);
-		} else {
+		}
+		else
+		{
 			right = new Node<T>(val);
 		}
 	}
@@ -111,33 +131,39 @@ void Node<T>::add(T val) {
 // returns the successor node of a node or NULL, if it a leaf node.
 // =================================================================
 template <class T>
-Node<T>* Node<T>::succesor() {
+Node<T> *Node<T>::succesor()
+{
 	Node<T> *le, *ri;
 
 	le = left;
 	ri = right;
 
-	if (left == NULL && right == NULL) {
+	if (left == NULL && right == NULL)
+	{
 		return NULL;
 	}
 
-	if (left == NULL && right != NULL) {
+	if (left == NULL && right != NULL)
+	{
 		right = NULL;
 		return ri;
 	}
 
-	if (left != NULL && left->right == NULL) {
+	if (left != NULL && left->right == NULL)
+	{
 		left = le->left;
 		le->left = NULL;
 		return le;
 	}
 
-	if (left != NULL && left->right != NULL) {
+	if (left != NULL && left->right != NULL)
+	{
 		Node<T> *parent, *child;
 		parent = left;
 		child = left->right;
 
-		while (child->right != NULL) {
+		while (child->right != NULL)
+		{
 			parent = child;
 			child = child->right;
 		}
@@ -156,36 +182,50 @@ Node<T>* Node<T>::succesor() {
 // =================================================================
 
 template <class T>
-void Node<T>::remove(T val) {
-	Node<T> * succ, *old;
+void Node<T>::remove(T val)
+{
+	Node<T> *succ, *old;
 
-	if (val < value) {
-		if (left != NULL) {
-			if (left->value == val) {
+	if (val < value)
+	{
+		if (left != NULL)
+		{
+			if (left->value == val)
+			{
 				old = left;
 				succ = left->succesor();
-				if (succ != NULL) {
+				if (succ != NULL)
+				{
 					succ->left = old->left;
 					succ->right = old->right;
 				}
 				left = succ;
 				delete old;
-			} else {
+			}
+			else
+			{
 				left->remove(val);
 			}
 		}
-	} else if (val > value) {
-		if (right != NULL) {
-			if (right->value == val) {
+	}
+	else if (val > value)
+	{
+		if (right != NULL)
+		{
+			if (right->value == val)
+			{
 				old = right;
 				succ = right->succesor();
-				if (succ != NULL) {
+				if (succ != NULL)
+				{
 					succ->left = old->left;
 					succ->right = old->right;
 				}
 				right = succ;
 				delete old;
-			} else {
+			}
+			else
+			{
 				right->remove(val);
 			}
 		}
@@ -197,14 +237,17 @@ void Node<T>::remove(T val) {
 //
 // =================================================================
 template <class T>
-void Node<T>::removeChilds() {
-	if (left != NULL) {
+void Node<T>::removeChilds()
+{
+	if (left != NULL)
+	{
 		left->removeChilds();
 		delete left;
 		left = NULL;
 	}
 
-	if (right != NULL) {
+	if (right != NULL)
+	{
 		right->removeChilds();
 		delete right;
 		right = NULL;
@@ -214,15 +257,18 @@ void Node<T>::removeChilds() {
 // =================================================================
 // Go through the tree in inorder.
 //
-// @param aux, a stringstream used to create the string to display.
+// @param aux, a stringstream used to create the string display.
 // =================================================================
 template <class T>
-void Node<T>::inOrder(std::stringstream &aux) const {
-	if (left != NULL) {
+void Node<T>::inOrder(std::stringstream &aux) const
+{
+	if (left != NULL)
+	{
 		left->inOrder(aux);
 	}
 	aux << value << " ";
-	if (right != NULL) {
+	if (right != NULL)
+	{
 		right->inOrder(aux);
 	}
 }
@@ -233,11 +279,14 @@ void Node<T>::inOrder(std::stringstream &aux) const {
 // @param aux, a stringstream used to create the string to display.
 // =================================================================
 template <class T>
-void Node<T>::postOrder(std::stringstream &aux) const {
-	if (left != 0) {
+void Node<T>::postOrder(std::stringstream &aux) const
+{
+	if (left != 0)
+	{
 		left->postOrder(aux);
 	}
-	if (right != 0) {
+	if (right != 0)
+	{
 		right->postOrder(aux);
 	}
 	aux << value << " ";
@@ -249,12 +298,15 @@ void Node<T>::postOrder(std::stringstream &aux) const {
 // @param aux, a stringstream used to create the string to display.
 // =================================================================
 template <class T>
-void Node<T>::preOrder(std::stringstream &aux) const {
+void Node<T>::preOrder(std::stringstream &aux) const
+{
 	aux << value << " ";
-	if (left != NULL) {
+	if (left != NULL)
+	{
 		left->preOrder(aux);
 	}
-	if (right != NULL) {
+	if (right != NULL)
+	{
 		right->preOrder(aux);
 	}
 }
@@ -266,9 +318,18 @@ void Node<T>::preOrder(std::stringstream &aux) const {
 // @return the number of leaves below the current node.
 // =================================================================
 template <class T>
-uint Node<T>::leaves() const {
-	//TO DO
-	return 0;
+uint Node<T>::leaves() const
+{
+	int count = 0;
+	if (right != nullptr)
+		count += right->leaves();
+	if (left != nullptr)
+		count += left->leaves();
+
+	if (right == nullptr && left == nullptr)
+		return 1;
+
+	return count;
 }
 
 // =================================================================
@@ -279,9 +340,19 @@ uint Node<T>::leaves() const {
 // @return the depth of the node.
 // =================================================================
 template <class T>
-uint Node<T>::depth() const {
-	//TO DO
-	return 0;
+uint Node<T>::depth() const
+{
+	int depth = 1;
+
+	if (leaves() == 0)
+		return depth;
+
+	if (left != nullptr)
+		depth += left->depth();
+	if (right != nullptr)
+		depth += right->depth();
+
+	return depth;
 }
 
 // =================================================================
@@ -292,8 +363,17 @@ uint Node<T>::depth() const {
 // @return true if the node is complete, false otherwise.
 // =================================================================
 template <class T>
-bool Node<T>::isFull() const {
-	//TO DO
+bool Node<T>::isFull() const
+{
+	if (depth() == 1)
+		return true;
+	if (left != nullptr && right != nullptr)
+	{
+		if (left->depth() != right->depth())
+			return false;
+		return left->isFull() && right->isFull();
+	}
+
 	return false;
 }
 
@@ -305,16 +385,33 @@ bool Node<T>::isFull() const {
 //				tree.
 // =================================================================
 template <class T>
-T Node<T>::ancestor(T val) const {
-	//TO DO
-	return T();
+T Node<T>::ancestor(T val) const
+{
+	if (left != nullptr)
+		if (left->value == val)
+			return value;
+
+	if (right != nullptr)
+		if (right->value == val)
+			return value;
+
+	if (val > value)
+		if (right != nullptr)
+			return right->ancestor(val);
+		else
+			throw NoSuchElement();
+	else if (left != nullptr)
+		return left->ancestor(val);
+	else
+		throw NoSuchElement();
 }
 
 // =================================================================
 // Definition of the Binary Search Tree class
 // =================================================================
 template <class T>
-class BST {
+class BST
+{
 private:
 	Node<T> *root;
 
@@ -337,13 +434,17 @@ public:
 	uint leaves() const;
 	bool isFull() const;
 	T ancestor(T) const;
+
+	void printGivenLevel(Node<T> *, int, ostream &) const;
+	void printLevelOrder(ostream &) const;
 };
 
 template <class T>
 BST<T>::BST() : root(NULL) {}
 
 template <class T>
-BST<T>::~BST() {
+BST<T>::~BST()
+{
 	removeAll();
 }
 
@@ -354,7 +455,8 @@ BST<T>::~BST() {
 //				 empty.
 // =================================================================
 template <class T>
-bool BST<T>::empty() const {
+bool BST<T>::empty() const
+{
 	return (root == NULL);
 }
 
@@ -366,10 +468,14 @@ bool BST<T>::empty() const {
 //				 False, if the bst is empty.
 // =================================================================
 template <class T>
-bool BST<T>::find(T val) const {
-	if (!empty()) {
+bool BST<T>::find(T val) const
+{
+	if (!empty())
+	{
 		return root->find(val);
-	} else {
+	}
+	else
+	{
 		return false;
 	}
 }
@@ -379,13 +485,18 @@ bool BST<T>::find(T val) const {
 //
 // @param val, the element to be inserted.
 // =================================================================
-template<class T>
-void BST<T>::add(T val) {
-	if (!empty()) {
-		if (!root->find(val)) {
+template <class T>
+void BST<T>::add(T val)
+{
+	if (!empty())
+	{
+		if (!root->find(val))
+		{
 			root->add(val);
 		}
-	} else {
+	}
+	else
+	{
 		root = new Node<T>(val);
 	}
 }
@@ -396,17 +507,23 @@ void BST<T>::add(T val) {
 // @param val, the element to be removed.
 // =================================================================
 template <class T>
-void BST<T>::remove(T val) {
-	if (!empty()) {
-		if (val == root->value) {
+void BST<T>::remove(T val)
+{
+	if (!empty())
+	{
+		if (val == root->value)
+		{
 			Node<T> *succ = root->succesor();
-			if (succ != NULL) {
+			if (succ != NULL)
+			{
 				succ->left = root->left;
 				succ->right = root->right;
 			}
 			delete root;
 			root = succ;
-		} else {
+		}
+		else
+		{
 			root->remove(val);
 		}
 	}
@@ -417,8 +534,10 @@ void BST<T>::remove(T val) {
 //
 // =================================================================
 template <class T>
-void BST<T>::removeAll() {
-	if (!empty()) {
+void BST<T>::removeAll()
+{
+	if (!empty())
+	{
 		root->removeChilds();
 		delete root;
 		root = NULL;
@@ -432,11 +551,13 @@ void BST<T>::removeAll() {
 //				 bst.
 // =================================================================
 template <class T>
-std::string BST<T>::inOrder() const {
+std::string BST<T>::inOrder() const
+{
 	std::stringstream aux;
 
 	aux << "[";
-	if (!empty()) {
+	if (!empty())
+	{
 		root->inOrder(aux);
 	}
 	aux << "]";
@@ -450,11 +571,13 @@ std::string BST<T>::inOrder() const {
 //				 bst.
 // =================================================================
 template <class T>
-std::string BST<T>::preOrder() const {
+std::string BST<T>::preOrder() const
+{
 	std::stringstream aux;
 
 	aux << "[";
-	if (!empty()) {
+	if (!empty())
+	{
 		root->preOrder(aux);
 	}
 	aux << "]";
@@ -468,11 +591,13 @@ std::string BST<T>::preOrder() const {
 //				 bst.
 // =================================================================
 template <class T>
-std::string BST<T>::postOrder() const {
+std::string BST<T>::postOrder() const
+{
 	std::stringstream aux;
 
 	aux << "[";
-	if (!empty()) {
+	if (!empty())
+	{
 		root->postOrder(aux);
 	}
 	aux << "]";
@@ -485,15 +610,44 @@ std::string BST<T>::postOrder() const {
 // @return a string with the level traversal of the tree.
 // =================================================================
 template <class T>
-std::string BST<T>::byLevel() const {
+std::string BST<T>::byLevel() const
+{
 	std::stringstream aux;
 
 	aux << "[";
-	if (!empty()) {
-		// TO DO
+	if (!empty())
+	{
+		printLevelOrder(aux);
 	}
 	aux << "]";
 	return aux.str();
+}
+
+template <class T>
+void BST<T>::printGivenLevel(Node<T> *root, int level, ostream &data) const
+{
+	if (root == NULL)
+		return;
+	if (level == 1)
+	{
+		data << root->value << " ";
+	}
+	else if (level > 1)
+	{
+		printGivenLevel(root->left, level - 1, data);
+		printGivenLevel(root->right, level - 1, data);
+	}
+}
+
+template <class T>
+void BST<T>::printLevelOrder(ostream &data) const
+{
+	int h = root->depth();
+	int i;
+	for (i = 1; i <= h; i++)
+	{
+		printGivenLevel(root, i, data);
+	}
 }
 
 // =================================================================
@@ -503,8 +657,10 @@ std::string BST<T>::byLevel() const {
 // 				 empty, it returns 0.
 // =================================================================
 template <class T>
-uint BST<T>::leaves() const {
-	if (!empty()) {
+uint BST<T>::leaves() const
+{
+	if (!empty())
+	{
 		return root->leaves();
 	}
 	return 0;
@@ -517,8 +673,10 @@ uint BST<T>::leaves() const {
 // @return true if the node is complete, false otherwise.
 // =================================================================
 template <class T>
-bool BST<T>::isFull() const {
-	if (!empty()) {
+bool BST<T>::isFull() const
+{
+	if (!empty())
+	{
 		return root->isFull();
 	}
 	return false;
@@ -532,12 +690,15 @@ bool BST<T>::isFull() const {
 //				 the ancestor of the root.
 // =================================================================
 template <class T>
-T BST<T>::ancestor(T val) const {
-	if (empty()) {
+T BST<T>::ancestor(T val) const
+{
+	if (empty())
+	{
 		throw NoSuchElement();
 	}
 
-	if (root->value == val) {
+	if (root->value == val)
+	{
 		throw NoSuchElement();
 	}
 
